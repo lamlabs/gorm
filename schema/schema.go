@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"sync"
 
-	"gorm.io/gorm/clause"
-	"gorm.io/gorm/logger"
+	"github.com/lamlabs/gorm/clause"
+	"github.com/lamlabs/gorm/logger"
 )
 
 // ErrUnsupportedDataType unsupported data type
@@ -249,7 +249,7 @@ func ParseWithSpecialTableName(dest interface{}, cacheStore *sync.Map, namer Nam
 			case "func(*gorm.DB) error": // TODO hack
 				reflect.Indirect(reflect.ValueOf(schema)).FieldByName(name).SetBool(true)
 			default:
-				logger.Default.Warn(context.Background(), "Model %v don't match %vInterface, should be `%v(*gorm.DB) error`. Please see https://gorm.io/docs/hooks.html", schema, name, name)
+				logger.Default.Warn(context.Background(), "Model %v don't match %vInterface, should be `%v(*gorm.DB) error`. Please see https://github.com/lamlabs/docs/hooks.html", schema, name, name)
 			}
 		}
 	}

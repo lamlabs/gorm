@@ -8,9 +8,9 @@ import (
 	"sync"
 	"testing"
 
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
-	. "gorm.io/gorm/utils/tests"
+	"github.com/lamlabs/gorm"
+	"github.com/lamlabs/gorm/clause"
+	. "github.com/lamlabs/gorm/utils/tests"
 )
 
 func TestPreloadWithAssociations(t *testing.T) {

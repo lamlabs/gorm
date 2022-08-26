@@ -7,10 +7,10 @@ import (
 	"reflect"
 	"strings"
 
-	"gorm.io/gorm/clause"
-	"gorm.io/gorm/logger"
-	"gorm.io/gorm/schema"
-	"gorm.io/gorm/utils"
+	"github.com/lamlabs/gorm/clause"
+	"github.com/lamlabs/gorm/logger"
+	"github.com/lamlabs/gorm/schema"
+	"github.com/lamlabs/gorm/utils"
 )
 
 // Create insert the value into database
@@ -327,14 +327,14 @@ func (db *DB) FirstOrCreate(dest interface{}, conds ...interface{}) (tx *DB) {
 	return tx
 }
 
-// Update update attributes with callbacks, refer: https://gorm.io/docs/update.html#Update-Changed-Fields
+// Update update attributes with callbacks, refer: https://github.com/lamlabs/docs/update.html#Update-Changed-Fields
 func (db *DB) Update(column string, value interface{}) (tx *DB) {
 	tx = db.getInstance()
 	tx.Statement.Dest = map[string]interface{}{column: value}
 	return tx.callbacks.Update().Execute(tx)
 }
 
-// Updates update attributes with callbacks, refer: https://gorm.io/docs/update.html#Update-Changed-Fields
+// Updates update attributes with callbacks, refer: https://github.com/lamlabs/docs/update.html#Update-Changed-Fields
 func (db *DB) Updates(values interface{}) (tx *DB) {
 	tx = db.getInstance()
 	tx.Statement.Dest = values

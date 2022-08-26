@@ -4,8 +4,8 @@ import (
 	"sync"
 	"testing"
 
-	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
+	"github.com/lamlabs/gorm"
+	"github.com/lamlabs/gorm/schema"
 )
 
 func checkStructRelation(t *testing.T, data interface{}, relations ...Relation) {

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"gorm.io/gorm"
+	"github.com/lamlabs/gorm"
 )
 
 func assertCallbacks(v interface{}, fnames []string) (result bool, msg string) {

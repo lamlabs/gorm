@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/now"
-	"gorm.io/gorm/utils"
+	"github.com/lamlabs/gorm/utils"
 )
 
 // special types' reflect type
