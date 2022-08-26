@@ -3,7 +3,6 @@ package gorm
 import (
 	"context"
 	"database/sql"
-	"reflect"
 
 	"github.com/lamlabs/gorm/clause"
 	"github.com/lamlabs/gorm/schema"
@@ -75,7 +74,6 @@ type GetDBConnector interface {
 }
 
 type Db interface {
-	scanIntoStruct(sch *schema.Schema, rows *sql.Rows, reflectValue reflect.Value, values []interface{}, columns []string, fields []*schema.Field, joinFields [][2]*schema.Field)
 	Session(config *Session) *DB
 	WithContext(ctx context.Context) *DB
 	Debug() (tx *DB)
@@ -86,7 +84,6 @@ type Db interface {
 	Callback() *callbacks
 	AddError(err error) error
 	DB() (*sql.DB, error)
-	getInstance() *DB
 	SetupJoinTable(model interface{}, field string, joinTable interface{}) error
 	Use(plugin Plugin) error
 	ToSQL(queryFn func(tx *DB) *DB) string
@@ -99,7 +96,6 @@ type Db interface {
 	Last(dest interface{}, conds ...interface{}) (tx *DB)
 	Find(dest interface{}, conds ...interface{}) (tx *DB)
 	FindInBatches(dest interface{}, batchSize int, fc func(tx *DB, batch int) error) *DB
-	assignInterfacesToValue(values ...interface{})
 	FirstOrInit(dest interface{}, conds ...interface{}) (tx *DB)
 	FirstOrCreate(dest interface{}, conds ...interface{}) (tx *DB)
 	Update(column string, value interface{}) (tx *DB)
