@@ -55,7 +55,7 @@ type Config struct {
 	// Plugins registered plugins
 	Plugins map[string]Plugin
 
-	callbacks  *callbacks
+	callbacks  *Callbacks
 	cacheStore *sync.Map
 }
 
@@ -330,7 +330,7 @@ func (db *DB) InstanceGet(key string) (interface{}, bool) {
 }
 
 // Callback returns callback manager
-func (db *DB) Callback() *callbacks {
+func (db *DB) Callback() *Callbacks {
 	return db.callbacks
 }
 

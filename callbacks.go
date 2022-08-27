@@ -12,8 +12,8 @@ import (
 	"github.com/lamlabs/gorm/utils"
 )
 
-func initializeCallbacks(db *DB) *callbacks {
-	return &callbacks{
+func initializeCallbacks(db *DB) *Callbacks {
+	return &Callbacks{
 		processors: map[string]*processor{
 			"create": {db: db},
 			"query":  {db: db},
@@ -26,7 +26,7 @@ func initializeCallbacks(db *DB) *callbacks {
 }
 
 // callbacks gorm callbacks manager
-type callbacks struct {
+type Callbacks struct {
 	processors map[string]*processor
 }
 
@@ -48,27 +48,27 @@ type callback struct {
 	processor *processor
 }
 
-func (cs *callbacks) Create() *processor {
+func (cs *Callbacks) Create() *processor {
 	return cs.processors["create"]
 }
 
-func (cs *callbacks) Query() *processor {
+func (cs *Callbacks) Query() *processor {
 	return cs.processors["query"]
 }
 
-func (cs *callbacks) Update() *processor {
+func (cs *Callbacks) Update() *processor {
 	return cs.processors["update"]
 }
 
-func (cs *callbacks) Delete() *processor {
+func (cs *Callbacks) Delete() *processor {
 	return cs.processors["delete"]
 }
 
-func (cs *callbacks) Row() *processor {
+func (cs *Callbacks) Row() *processor {
 	return cs.processors["row"]
 }
 
-func (cs *callbacks) Raw() *processor {
+func (cs *Callbacks) Raw() *processor {
 	return cs.processors["raw"]
 }
 

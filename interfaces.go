@@ -81,6 +81,7 @@ type Db interface {
 	Get(key string) (interface{}, bool)
 	InstanceSet(key string, value interface{}) *DB
 	InstanceGet(key string) (interface{}, bool)
+	Callback() *Callbacks
 	AddError(err error) error
 	DB() (*sql.DB, error)
 	SetupJoinTable(model interface{}, field string, joinTable interface{}) error
