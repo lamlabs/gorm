@@ -8,10 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
-	. "gorm.io/gorm/utils/tests"
+	"github.com/lamlabs/driver/postgres"
+	"github.com/lamlabs/gorm"
+	"github.com/lamlabs/gorm/schema"
 )
 
 func TestMigrate(t *testing.T) {

@@ -3,8 +3,7 @@ package tests_test
 import (
 	"testing"
 
-	"gorm.io/gorm"
-	. "gorm.io/gorm/utils/tests"
+	"github.com/lamlabs/gorm"
 )
 
 func TestMany2ManyAssociation(t *testing.T) {
