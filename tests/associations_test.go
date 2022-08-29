@@ -3,8 +3,10 @@ package tests_test
 import (
 	"testing"
 
-	"github.com/lamlabs/gorm"
-	. "github.com/lamlabs/gorm/utils/tests"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
+	"gorm.io/gorm/schema"
+	. "gorm.io/gorm/utils/tests"
 )
 
 func AssertAssociationCount(t *testing.T, data interface{}, name string, result int64, reason string) {
@@ -259,5 +261,90 @@ func TestSaveHasManyCircularReference(t *testing.T) {
 		children[1].ID != parent.Children[1].ID {
 		t.Errorf("circular reference children save not equal children:%v parent.Children:%v",
 			children, parent.Children)
+	}
+}
+
+func TestAssociationError(t *testing.T) {
+	user := *GetUser("TestAssociationError", Config{Pets: 2, Company: true, Account: true, Languages: 2})
+	DB.Create(&user)
+
+	var user1 User
+	DB.Preload("Company").Preload("Pets").Preload("Account").Preload("Languages").First(&user1)
+
+	var emptyUser User
+	var err error
+	// belongs to
+	err = DB.Model(&emptyUser).Association("Company").Delete(&user1.Company)
+	AssertEqual(t, err, gorm.ErrPrimaryKeyRequired)
+	// has many
+	err = DB.Model(&emptyUser).Association("Pets").Delete(&user1.Pets)
+	AssertEqual(t, err, gorm.ErrPrimaryKeyRequired)
+	// has one
+	err = DB.Model(&emptyUser).Association("Account").Delete(&user1.Account)
+	AssertEqual(t, err, gorm.ErrPrimaryKeyRequired)
+	// many to many
+	err = DB.Model(&emptyUser).Association("Languages").Delete(&user1.Languages)
+	AssertEqual(t, err, gorm.ErrPrimaryKeyRequired)
+}
+
+type (
+	myType           string
+	emptyQueryClause struct {
+		Field *schema.Field
+	}
+)
+
+func (myType) QueryClauses(f *schema.Field) []clause.Interface {
+	return []clause.Interface{emptyQueryClause{Field: f}}
+}
+
+func (sd emptyQueryClause) Name() string {
+	return "empty"
+}
+
+func (sd emptyQueryClause) Build(clause.Builder) {
+}
+
+func (sd emptyQueryClause) MergeClause(*clause.Clause) {
+}
+
+func (sd emptyQueryClause) ModifyStatement(stmt *gorm.Statement) {
+	// do nothing
+}
+
+func TestAssociationEmptyQueryClause(t *testing.T) {
+	type Organization struct {
+		gorm.Model
+		Name string
+	}
+	type Region struct {
+		gorm.Model
+		Name          string
+		Organizations []Organization `gorm:"many2many:region_orgs;"`
+	}
+	type RegionOrg struct {
+		RegionId       uint
+		OrganizationId uint
+		Empty          myType
+	}
+	if err := DB.SetupJoinTable(&Region{}, "Organizations", &RegionOrg{}); err != nil {
+		t.Fatalf("Failed to set up join table, got error: %s", err)
+	}
+	if err := DB.Migrator().DropTable(&Organization{}, &Region{}); err != nil {
+		t.Fatalf("Failed to migrate, got error: %s", err)
+	}
+	if err := DB.AutoMigrate(&Organization{}, &Region{}); err != nil {
+		t.Fatalf("Failed to migrate, got error: %v", err)
+	}
+	region := &Region{Name: "Region1"}
+	if err := DB.Create(region).Error; err != nil {
+		t.Fatalf("fail to create region %v", err)
+	}
+	var orgs []Organization
+
+	if err := DB.Model(&Region{}).Association("Organizations").Find(&orgs); err != nil {
+		t.Fatalf("fail to find region organizations %v", err)
+	} else {
+		AssertEqual(t, len(orgs), 0)
 	}
 }
