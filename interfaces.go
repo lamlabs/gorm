@@ -82,3 +82,72 @@ type Rows interface {
 	Err() error
 	Close() error
 }
+
+type Db interface {
+	Model(value interface{}) (tx *DB)
+	Clauses(conds ...clause.Expression) (tx *DB)
+	Table(name string, args ...interface{}) (tx *DB)
+	Distinct(args ...interface{}) (tx *DB)
+	Select(query interface{}, args ...interface{}) (tx *DB)
+	Omit(columns ...string) (tx *DB)
+	Where(query interface{}, args ...interface{}) (tx *DB)
+	Not(query interface{}, args ...interface{}) (tx *DB)
+	Or(query interface{}, args ...interface{}) (tx *DB)
+	Joins(query string, args ...interface{}) (tx *DB)
+	Group(name string) (tx *DB)
+	Having(query interface{}, args ...interface{}) (tx *DB)
+	Order(value interface{}) (tx *DB)
+	Limit(limit int) (tx *DB)
+	Offset(offset int) (tx *DB)
+	Scopes(funcs ...func(*DB) *DB) (tx *DB)
+	Preload(query string, args ...interface{}) (tx *DB)
+	Attrs(attrs ...interface{}) (tx *DB)
+	Assign(attrs ...interface{}) (tx *DB)
+	Unscoped() (tx *DB)
+	Raw(sql string, values ...interface{}) (tx *DB)
+	Migrator() Migrator
+	AutoMigrate(dst ...interface{}) error
+	Create(value interface{}) (tx *DB)
+	CreateInBatches(value interface{}, batchSize int) (tx *DB)
+	Save(value interface{}) (tx *DB)
+	First(dest interface{}, conds ...interface{}) (tx *DB)
+	Take(dest interface{}, conds ...interface{}) (tx *DB)
+	Last(dest interface{}, conds ...interface{}) (tx *DB)
+	Find(dest interface{}, conds ...interface{}) (tx *DB)
+	FindInBatches(dest interface{}, batchSize int, fc func(tx *DB, batch int) error) *DB
+	FirstOrInit(dest interface{}, conds ...interface{}) (tx *DB)
+	FirstOrCreate(dest interface{}, conds ...interface{}) (tx *DB)
+	Update(column string, value interface{}) (tx *DB)
+	Updates(values interface{}) (tx *DB)
+	UpdateColumn(column string, value interface{}) (tx *DB)
+	UpdateColumns(values interface{}) (tx *DB)
+	Delete(value interface{}, conds ...interface{}) (tx *DB)
+	Count(count *int64) (tx *DB)
+	Row() *sql.Row
+	Rows() (*sql.Rows, error)
+	Scan(dest interface{}) (tx *DB)
+	Pluck(column string, dest interface{}) (tx *DB)
+	ScanRows(rows *sql.Rows, dest interface{}) error
+	Connection(fc func(tx *DB) error) (err error)
+	Transaction(fc func(tx *DB) error, opts ...*sql.TxOptions) (err error)
+	Begin(opts ...*sql.TxOptions) *DB
+	Commit() *DB
+	Rollback() *DB
+	SavePoint(name string) *DB
+	RollbackTo(name string) *DB
+	Exec(sql string, values ...interface{}) (tx *DB)
+	Association(column string) *Association
+	Session(config *Session) *DB
+	WithContext(ctx context.Context) *DB
+	Debug() (tx *DB)
+	Set(key string, value interface{}) *DB
+	Get(key string) (interface{}, bool)
+	InstanceSet(key string, value interface{}) *DB
+	InstanceGet(key string) (interface{}, bool)
+	Callback() *Callbacks
+	AddError(err error) error
+	DB() (*sql.DB, error)
+	SetupJoinTable(model interface{}, field string, joinTable interface{}) error
+	Use(plugin Plugin) error
+	ToSQL(queryFn func(tx *DB) *DB) string
+}
